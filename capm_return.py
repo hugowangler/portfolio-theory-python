@@ -3,43 +3,25 @@ Calculate CAPM using pandas
 """
 import pandas as pd
 
+from data.test import DF_DATA
 
-def capm_return():
+
+def returns(prices: pd.DataFrame) -> pd.DataFrame:
+    """
+    Calculates and returns a DataFrame containing the returns of a ticker
+    given the prices
+    """
+    return prices.pct_change()
+
+
+def capm_return(returns: pd.DataFrame):
     """Calculates the CAPM return and prints the results along the way"""
-    # AAPL, TSLA
-    data = {
-        "AAPL": [
-            74.095229157816846,
-            73.374876006024522,
-            73.959546201143638,
-            73.611704439490481,
-            74.795846606820334,
-        ],
-        "TSLA": [
-            86.052000000000007,
-            88.602000000000004,
-            90.308000000000007,
-            93.812000000000012,
-            98.427999999999997,
-        ],
-        "SPY": [
-            315.68826255969481,
-            313.29778905984301,
-            314.49302580976888,
-            313.60874496226279,
-            315.28013293776888,
-        ],
-    }
-    print("--- PRICES ---")
-    df_prices = pd.DataFrame(data)
-    print(df_prices)
-
+    # AAPL, TSLA, SPY
     print("--- RETURNS ---")
-    df_pct_change = df_prices.pct_change()
-    print(df_pct_change)
+    print(returns)
 
     print("--- COVARIANCE MATRIX ---")
-    df_cov = df_pct_change.cov()
+    df_cov = returns.cov()
     print(df_cov)
 
     print("--- BETAS ---")
@@ -51,4 +33,4 @@ def capm_return():
 
 
 if __name__ == "__main__":
-    capm_return()
+    capm_return(DF_DATA)
