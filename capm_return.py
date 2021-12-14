@@ -11,7 +11,7 @@ def returns(prices: pd.DataFrame) -> pd.DataFrame:
     Calculates and returns a DataFrame containing the returns of a ticker
     given the prices
     """
-    return prices.pct_change()
+    return pd.DataFrame(prices.pct_change().dropna(how="all"))
 
 
 def capm_return(
@@ -21,6 +21,7 @@ def capm_return(
     compounding: bool = True,
 ) -> pd.DataFrame:
     """Calculates the CAPM return and prints the results along the way"""
+    frequency = len(prices[market_ticker])
     # AAPL, TSLA, SPY
     print("--- PRICES ---")
     print(prices)
@@ -40,11 +41,11 @@ def capm_return(
     if compounding:
         # Geometric mean returns
         mkt_mean_ret = (1 + df_ret[market_ticker]).prod() ** (
-            len(prices[market_ticker]) / df_ret[market_ticker].count()
+            frequency / df_ret[market_ticker].count()
         ) - 1
     else:
         # Arithmetic mean returns
-        mkt_mean_ret = df_ret[market_ticker].mean() * len(prices[market_ticker])
+        mkt_mean_ret = df_ret[market_ticker].mean() * frequency
 
     return risk_free_rate + betas * (mkt_mean_ret - risk_free_rate)
 
